@@ -6,15 +6,26 @@ filter: "evt.Parsed.program == 'modsecurity'"
 name: pocketinnocity/modsecurity
 description: "Parse custom PocketInnoCity modsecurity logs"
 grok:
-  pattern: Message:.*Access denied with %{WORD:description}.* %{INT:status_code}.*(phase %{INT:phase})
+  #pattern: Message:.*Access denied with %{WORD:description}.* %{INT:status_code}.*(phase %{INT:phase})
+  pattern: Apache-Error.*client %{IPV4:client_ip}.* %{INT:status_code}.*(phase %{INT:phase}).*detected %{WORD:type_attack}.*id "%{INT:modsecurity_rule_id}.*msg "(?<modsecurity_rule_msg>.*?)(").*hostname "(?<hostname>.*?)(").*uri "(?<uri>.*?)(")
   # The field to which we apply the grok pattern: the log message itself
   apply_on: message
 statics:
   - meta: log_type
     value: modsecurity_denied
-  - meta: description
-    expression: "evt.Parsed.description"
+  - meta: client_ip
+    value: "evt.Parsed.client_ip"
   - meta: status_code
     expression: "evt.Parsed.status_code"
   - meta: phase
     expression: "evt.Parsed.phase"
+  - meta: type_attack
+    expression: "evt.Parsed.type_attack"
+  - meta: modsecurity_rule_id
+    expression: "evt.Parsed.modsecurity_rule_id"
+  - meta: modsecurity_rule_msg
+    expression: "evt.Parsed.modsecurity_rule_msg"
+  - meta: hostname
+    expression: "evt.Parsed.hostname"
+  - meta: uri
+    expression: "evt.Parsed.uri"

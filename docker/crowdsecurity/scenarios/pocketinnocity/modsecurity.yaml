@@ -1,0 +1,19 @@
+type: leaky
+# false in production
+debug: true
+name: pocketinnocity/modsecurity
+description: "Ban 403 @sqli, @xss, User-Agent"
+filter: "evt.Meta.log_type == 'modsecurity_denied' && evt.Meta.status_code == '403' && evt.Meta.modsecurity_rule_msg == 'Access denied'"
+groupby: evt.Meta.client_ip
+# 5 Logs
+capacity: 5
+# in 1 minutes
+leakspeed: 5m
+# Banned time
+blackhole: 60m
+labels:
+  type: forbidden_attack
+  service: web
+  # In production to ban IP
+  # remedition: true
+  scope: ip
