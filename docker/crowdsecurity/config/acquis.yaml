@@ -1,0 +1,7 @@
+filename: /logs/apache2/*.log
+labels:
+  type: apache2
+---
+filename: /logs/modsecurity/*.log
+labels:
+  type: modsecurity
