@@ -1,7 +1,10 @@
-filename: /logs/apache2/*.log
+filenames:
+  - /logs/access.pocketinnocity.log
+  - /logs/error.pocketinnocity.log
+  - /logs/other_vhosts_access.log
 labels:
   type: apache2
 ---
-filename: /logs/modsecurity/*.log
+filename: /logs/modsec_audit.pocketinnocity.log
 labels:
   type: modsecurity

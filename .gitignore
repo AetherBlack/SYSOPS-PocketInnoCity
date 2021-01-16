@@ -1,3 +1,4 @@
 # Exclude note
 *.help
 crowdsec
+local_api_credentials.yaml
