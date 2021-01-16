@@ -1,0 +1,20 @@
+onsuccess: next_stage
+# false in production
+debug: true
+# True condition
+filter: "evt.Parsed.program == 'modsecurity'"
+name: pocketinnocity/modsecurity
+description: "Parse custom PocketInnoCity modsecurity logs"
+grok:
+  pattern: Message:.*Access denied with %{WORD:description}.* %{INT:status_code}.*(phase %{INT:phase})
+  # The field to which we apply the grok pattern: the log message itself
+  apply_on: message
+statics:
+  - meta: log_type
+    value: modsecurity_denied
+  - meta: description
+    expression: "evt.Parsed.description"
+  - meta: status_code
+    expression: "evt.Parsed.status_code"
+  - meta: phase
+    expression: "evt.Parsed.phase"

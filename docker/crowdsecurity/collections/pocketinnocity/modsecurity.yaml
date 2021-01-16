@@ -1,0 +1,11 @@
+parsers:
+  - pocketinnocity/modsecurity
+scenarios:
+  - pocketinnocity/modsecurity
+description: "Modsecurity parsers and scenarios for apache2"
+author: pocketinnocity
+tags:
+  - linux
+  - web
+  - waf
+  - apache2
