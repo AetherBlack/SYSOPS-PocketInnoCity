@@ -1,5 +1,6 @@
 PWD := $(shell pwd)
 
+
 build:
 	# Build website
 
@@ -31,12 +32,22 @@ build:
 		-v /etc/pocketinnocity/logs:/logs \
 		-v /etc/pocketinnocity/db/crowdsec.db:/var/lib/crowdsec/data/crowdsec.db \
 		-v $(PWD)/crowdsecurity/config/local_api_credentials.yaml:/etc/crowdsec/local_api_credentials.yaml \
-		-e COLLECTIONS="pocketinnocity/modsecurity" \
+		-v $(PWD)/crowdsecurity/collections/pocketinnocity/modsecurity.yaml:/etc/crowdsec/collections/modsecurity.yaml \
+		-v $(PWD)/crowdsecurity/parsers/pocketinnocity/modsecurity.yaml:/etc/crowdsec/parsers/s01-parse/modsecurity.yaml \
+		-v $(PWD)/crowdsecurity/scenarios/pocketinnocity/modsecurity.yaml:/etc/crowdsec/scenarios/modsecurity.yaml \
+		-v $(PWD)/crowdsecurity:/share \
 		-p 8080:8080 -p 6060:6060 \
 		--name crowdsec crowdsecurity/crowdsec
 
-clean:
+
+clean: cleanweb cleancs
+
+
+cleanweb:
 	sudo docker stop webpocketinnocity
 	sudo docker rm webpocketinnocity
+
+
+cleancs:
 	sudo docker stop crowdsec
 	sudo docker rm crowdsec

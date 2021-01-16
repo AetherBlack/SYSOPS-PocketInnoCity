@@ -7,7 +7,8 @@ name: pocketinnocity/modsecurity
 description: "Parse custom PocketInnoCity modsecurity logs"
 grok:
   #pattern: Message:.*Access denied with %{WORD:description}.* %{INT:status_code}.*(phase %{INT:phase})
-  pattern: Apache-Error.*client %{IPV4:client_ip}.* %{INT:status_code}.*(phase %{INT:phase}).*detected %{WORD:type_attack}.*id "%{INT:modsecurity_rule_id}.*msg "(?<modsecurity_rule_msg>.*?)(").*hostname "(?<hostname>.*?)(").*uri "(?<uri>.*?)(")
+  #pattern: Apache-Error.*client %{IPV4:client_ip}.* %{INT:status_code}.*(phase %{INT:phase}).*detected %{WORD:type_attack}.*id "%{INT:modsecurity_rule_id}.*msg "(?<modsecurity_rule_msg>.*?)(").*hostname "(?<hostname>.*?)(").*uri "(?<uri>.*?)(")
+  pattern: Apache-Error.*client %{IPV4:client_ip}.* %{INT:status_code}.*(phase %{INT:phase}).*detected %{WORD:type_attack}.*id "%{INT:modsecurity_rule_id}.*msg "%{DATA:modsecurity_rule_msg}".*hostname "%{DATA:hostname}".*uri "%{DATA:uri}"
   # The field to which we apply the grok pattern: the log message itself
   apply_on: message
 statics:
