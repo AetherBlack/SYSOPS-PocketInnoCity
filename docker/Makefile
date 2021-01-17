@@ -26,15 +26,15 @@ build:
 
 	# -it for debug -d for production
 
-	sudo docker run -it \
+	sudo docker run -d \
 		-v $(PWD)/crowdsecurity/config/config.yaml:/etc/crowdsec/config.yaml \
 		-v $(PWD)/crowdsecurity/config/acquis.yaml:/etc/crowdsec/acquis.yaml \
 		-v /etc/pocketinnocity/logs:/logs \
 		-v /etc/pocketinnocity/db/crowdsec.db:/var/lib/crowdsec/data/crowdsec.db \
 		-v $(PWD)/crowdsecurity/config/local_api_credentials.yaml:/etc/crowdsec/local_api_credentials.yaml \
 		-v $(PWD)/crowdsecurity/collections/pocketinnocity/modsecurity.yaml:/etc/crowdsec/collections/modsecurity.yaml \
-		-v $(PWD)/crowdsecurity/parsers/pocketinnocity/modsecurity.yaml:/etc/crowdsec/parsers/s01-parse/modsecurity.yaml \
-		-v $(PWD)/crowdsecurity/scenarios/pocketinnocity/modsecurity.yaml:/etc/crowdsec/scenarios/modsecurity.yaml \
+		-v $(PWD)/crowdsecurity/parsers/pocketinnocity/modsecurity-logs.yaml:/etc/crowdsec/parsers/s01-parse/modsecurity-logs.yaml \
+		-v $(PWD)/crowdsecurity/scenarios/pocketinnocity/modsecurity-attack.yaml:/etc/crowdsec/scenarios/modsecurity-attack.yaml \
 		-v $(PWD)/crowdsecurity:/share \
 		-p 8080:8080 -p 6060:6060 \
 		--name crowdsec crowdsecurity/crowdsec

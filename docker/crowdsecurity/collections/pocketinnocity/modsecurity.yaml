@@ -1,7 +1,7 @@
 parsers:
-  - pocketinnocity/modsecurity
+  - pocketinnocity/modsecurity-logs
 scenarios:
-  - pocketinnocity/modsecurity
+  - pocketinnocity/modsecurity-attack
 description: "Modsecurity parsers and scenarios for apache2"
 author: pocketinnocity
 tags:
