@@ -2,3 +2,4 @@
 *.help
 crowdsec
 local_api_credentials.yaml
+scripts
