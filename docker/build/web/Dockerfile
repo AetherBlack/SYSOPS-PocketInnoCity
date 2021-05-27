@@ -1,10 +1,7 @@
 # Docker image
 FROM php:8.0-apache
 
-# Expose port
-EXPOSE 80 443
-
-# Non interactive apt
+# Non interactive APT
 ENV DEBIAN_FRONTEND noninteractive
 
 # Creation des dossiers
@@ -35,7 +32,7 @@ COPY certs /etc/pocketinnocity/certs
 ## Modsecurity
 COPY modsecurity /etc/modsecurity
 ## Website
-COPY index.php /var/www/html/index.php
+COPY ./app/ /var/www/html/
 
 # Activation de la configuration
 RUN a2ensite pocketinnocity && \

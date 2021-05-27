@@ -1,1 +1,29 @@
-version: "3.8"
+version: "3.4"
+services:
+  pocketinnocity-php8apache:
+    # Chemin du build
+    build: ./build/web/
+    # Nom de l'image
+    image: pocketinnocity-web:latest
+    # Nom du container
+    container_name: pocketinnocity-web
+    # Ouverture des ports
+    ports:
+      - "8080:80"
+      - "8443:443"
+  pocketinnocity-mysql:
+    # Chemin du build
+    build: ./build/database/
+    # Nom de l'image
+    image: pocketinnocity-db:latest
+    # Nom du container
+    container_name: pocketinnocity-db
+    # Déclaration des volumes
+    volumes:
+      - "mysql-pic-data:/var/lib/mysql"
+    # Variables d'environnement
+    environment:
+      - "MYSQL_ROOT_PASSWORD=Passe1?"
+# Déclaration des volumes
+volumes:
+  mysql-pic-data: {}
