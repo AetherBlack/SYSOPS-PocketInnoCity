@@ -1,6 +1,9 @@
 # Docker image
 FROM php:8.0-apache
 
+# Docker arguments
+ARG PATH_TO_SYMFONY_BINARY=/root/.symfony/bin/symfony
+
 # Non interactive APT
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -22,19 +25,29 @@ a2enmod ssl
 
 # COPY
 ## Configuration apache
-COPY sites-available/pocketinnocity.conf /etc/apache2/sites-available/pocketinnocity.conf
+COPY ./app/sites-available/pocketinnocity.conf /etc/apache2/sites-available/pocketinnocity.conf
 ## Configuration PHP
-COPY php/php.ini /usr/local/etc/php/php.ini
+COPY ./app/php/php.ini /usr/local/etc/php/php.ini
 ## Configuration modsecurity in apache
-COPY conf-available/security.conf /etc/apache2/conf-available/security.conf
+COPY ./app/conf-available/security.conf /etc/apache2/conf-available/security.conf
 ## Certificats HTTPS
-COPY certs /etc/pocketinnocity/certs
+COPY ./app/certs /etc/pocketinnocity/certs
 ## Modsecurity
-COPY modsecurity /etc/modsecurity
+COPY ./app/modsecurity /etc/modsecurity
 ## Website
-COPY ./app/ /var/www/html/
+COPY ./app/www /var/www/html/
+## Symfony binary
+COPY ./app/symfony_installer /tmp/symfony_installer
 
 # Activation de la configuration
 RUN a2ensite pocketinnocity && \
 # Reload or start apache2
-/etc/init.d/apache2 reload || /etc/init.d/apache2 start
+/etc/init.d/apache2 reload || /etc/init.d/apache2 start && \
+# Installation de symfony
+bash /tmp/symfony_installer && \
+# Changement du cwd
+cd /var/www/html && \
+# Migrations doctrine
+${PATH_TO_SYMFONY_BINARY} console doctrines:migrations:migrate && \
+# Dummy data
+${PATH_TO_SYMFONY_BINARY} console doctrine:fixtures:load
