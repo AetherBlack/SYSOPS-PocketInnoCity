@@ -1,0 +1,5 @@
+PATH=$(/usr/bin/getconf PATH || kill $$)
+PATH=$PATH:/usr/local/bin
+
+php /tmp/composer-setup.php
+php -r "unlink('/tmp/composer-setup.php');"

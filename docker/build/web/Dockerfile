@@ -3,6 +3,7 @@ FROM php:8.0-apache
 
 # Docker arguments
 ARG PATH_TO_SYMFONY_BINARY=/root/.symfony/bin/symfony
+ARG PATH_TO_COMPOSER_INSTALLER=/tmp/composer_installer
 
 # Non interactive APT
 ENV DEBIAN_FRONTEND noninteractive
@@ -17,7 +18,7 @@ rm /etc/apache2/sites-available/*.conf && \
 # Mise à jour des packets
 apt update && \
 # Installation de modsecurity
-apt install --no-install-recommends --yes libapache2-mod-security2 && \
+apt install -qq -y libapache2-mod-security2 && \
 # Suppression du cache APT
 rm -rf /var/lib/apt/lists/* && \
 # Activation du ssl
@@ -38,6 +39,9 @@ COPY ./app/modsecurity /etc/modsecurity
 COPY ./app/www /var/www/html/
 ## Symfony binary
 COPY ./app/symfony_installer /tmp/symfony_installer
+## Composer installation
+COPY ./app/composer_installer ${PATH_TO_COMPOSER_INSTALLER}
+COPY ./app/composer-setup.php /tmp/composer-setup.php
 
 # Activation de la configuration
 RUN a2ensite pocketinnocity && \
@@ -45,9 +49,15 @@ RUN a2ensite pocketinnocity && \
 /etc/init.d/apache2 reload || /etc/init.d/apache2 start && \
 # Installation de symfony
 bash /tmp/symfony_installer && \
+# Installation de composer
+bash ${PATH_TO_COMPOSER_INSTALLER} && \
 # Changement du cwd
 cd /var/www/html && \
+# Installation des dépendances
+composer install && \
 # Migrations doctrine
-${PATH_TO_SYMFONY_BINARY} console doctrines:migrations:migrate && \
+${PATH_TO_SYMFONY_BINARY} console doctrine:migrations:migrate && \
 # Dummy data
-${PATH_TO_SYMFONY_BINARY} console doctrine:fixtures:load
+${PATH_TO_SYMFONY_BINARY} console doctrine:fixtures:load && \
+# Lancement du serveur web par Symfony
+symfony serve -d
